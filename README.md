@@ -8,7 +8,7 @@ Generate your Taproot wallet address for Bitcoin with [Node](https://nodejs.org/
 ## Usage
 
 ```sh
-node '.\wallet,js'
+node '.\wallet.js'
 ```
 
 ## Example output
