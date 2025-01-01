@@ -9,29 +9,37 @@ import { initEccLib, payments } from "bitcoinjs-lib";
 const bip32 = BIP32Factory(ecc);
 initEccLib(ecc);
 
-// First receiving address of first account
-const DERIVATION_PATH = `m/86'/0'/0'/0/0`;
+// Derivation paths
+const SEGWIT_DERIVATION_PATH = `m/84'/0'/0'/0/0`;
+const TAPROOT_DERIVATION_PATH = `m/86'/0'/0'/0/0`;
+
 // Utility to convert a public key to x-only format
-const toXOnly = (
-  pubKey,
-) => (pubKey.length === 32 ? pubKey : pubKey.slice(1, 33));
+const toXOnly = (pubKey) => pubKey.length === 32 ? pubKey : pubKey.slice(1, 33);
 
 /**
- * Generates a new Taproot wallet.
- * @returns {Object} Wallet details including address, WIF, and mnemonic.
+ * Generates a new Bitcoin wallet with Taproot and native SegWit addresses.
+ * @returns {Object} Wallet details including addresses, WIF, and mnemonic.
  */
-function generateTaprootWallet() {
+function generateBitcoinWallet() {
   // Generate mnemonic and seed
   const mnemonic = generateMnemonic();
   const seed = mnemonicToSeedSync(mnemonic);
 
-  // Derive the root key and child key
+  // Derive the root key
   const rootKey = bip32.fromSeed(seed);
-  const childNode = rootKey.derivePath(DERIVATION_PATH);
 
-  // Derive x-only public key and create Taproot address
-  const xOnlyPubKey = toXOnly(childNode.publicKey);
-  const { address } = payments.p2tr({ internalPubkey: xOnlyPubKey });
+  // Derive Taproot address
+  const taprootNode = rootKey.derivePath(TAPROOT_DERIVATION_PATH);
+  const taprootXOnlyPubKey = toXOnly(taprootNode.publicKey);
+  const { address: taprootAddress } = payments.p2tr({
+    internalPubkey: taprootXOnlyPubKey,
+  });
+
+  // Derive native SegWit address
+  const segwitNode = rootKey.derivePath(SEGWIT_DERIVATION_PATH);
+  const { address: segwitAddress } = payments.p2wpkh({
+    pubkey: segwitNode.publicKey,
+  });
 
   // Get current date and time
   const now = new Date();
@@ -40,18 +48,20 @@ function generateTaprootWallet() {
 
   return {
     date: `${creationDate}, ${creationTime}`,
-    address,
-    wif: childNode.toWIF(),
+    taprootAddress,
+    segwitAddress,
+    wif: taprootNode.toWIF(), // WIF can be derived from either node
     mnemonic,
   };
 }
 
 // Generate the wallet and log the details
-const wallet = generateTaprootWallet();
+const wallet = generateBitcoinWallet();
 const outputHead = `\nBitcoin Wallet (${wallet.date})\n-----`;
-const taprootAddress = `- Taproot Address: ${wallet.address}`;
+const taproot = `- Taproot Address: ${wallet.taprootAddress}`;
+const segwit = `- Native SegWit (Bech32) Address: ${wallet.segwitAddress}`;
 const walletWif = `- Private Key (WIF): ${wallet.wif}`;
 const walletMnemonic = `- Mnemonic: ${wallet.mnemonic}`;
 console.log(
-  `${outputHead}\n${taprootAddress}\n${walletWif}\n${walletMnemonic}\n`,
+  `${outputHead}\n${taproot}\n${segwit}\n${walletWif}\n${walletMnemonic}\n`,
 );
