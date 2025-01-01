@@ -27,3 +27,14 @@ Bitcoin Wallet (2025-01-01, 19:25:04)
 - Private Key (WIF): KyykaCy888TQm7TX7mYb4SYzR7cRcTXdQnFAsGHv1pgZgg8apcEj
 - Mnemonic: egg comfort increase stay keep million gallery between organ jacket helmet offer
 ```
+
+## Security considerations
+
+- Keep private keys and mnemonics safe. Anyone can control your funds with these.
+- Do not run this script on potentially compromised or untrusted systems.
+- For better security, disconnect your device from the internet while generating wallets.
+
+## Compatibility notes
+
+- Taproot addresses are compatible with wallets and exchanges with P2TR (Pay-to-Taproot) support.
+- Native SegWit addresses ensure better compatibility with older wallets with P2WPKH support.
