@@ -14,7 +14,7 @@ node '.\wallet,js'
 ## Example output
 
 ```
-Bitcoin Wallet (2025-01-01, 18:02:01):
+Bitcoin Wallet (2025-01-01, 18:02:01)
 -----
 Taproot Address: bc1pt4x4uwyukqgr3t40339f43fpgsdwhtxph8p9pguw2574kspgk9psmn4uwr
 Private Key (WIF): Kxpc7M3A4CNHHizjJggcZpsNfZHps5buP98ir8FRUCheoAd2tHi2

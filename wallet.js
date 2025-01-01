@@ -48,7 +48,7 @@ function generateTaprootWallet() {
 
 // Generate the wallet and log the details
 const wallet = generateTaprootWallet();
-const outputHead = `\nBitcoin Wallet (${wallet.date}):\n-----`;
+const outputHead = `\nBitcoin Wallet (${wallet.date})\n-----`;
 const taprootAddress = `- Taproot Address: ${wallet.address}`;
 const walletWif = `- Private Key (WIF): ${wallet.wif}`;
 const walletMnemonic = `- Mnemonic: ${wallet.mnemonic}`;

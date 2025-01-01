@@ -1,5 +1,6 @@
 {
   "name": "bitcoin-wallet-generator",
+  "version": "0.1.0",
   "type": "module",
   "dependencies": {
     "bip32": "^4.0.0",
